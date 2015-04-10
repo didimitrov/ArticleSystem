@@ -4,7 +4,7 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Article Details</h2>
+
 <h2>@Model.Name</h2>
 <div class="row">
     <div class="span4">
@@ -21,14 +21,21 @@
 </div>
 
 <div>
-    Votes: <span id="laptop-votes">@Model.Votes</span>
+    Votes: <span id="article-votes">@Model.Votes</span>
     @if (User.Identity.IsAuthenticated && Model.UserCanVote)
     {
-        @Ajax.ActionLink("Vote", "Vote", new { id = Model.Id }, new AjaxOptions { InsertionMode = InsertionMode.Replace, UpdateTargetId = "laptop-votes", HttpMethod = "Post", OnSuccess = "hideVoteButton" }, new { id = "vote-button", @class = "btn" })
+        @Ajax.ActionLink("Vote", "Vote", new {id = Model.Id}, new AjaxOptions
+        {
+            InsertionMode = InsertionMode.Replace,
+            UpdateTargetId = "article-votes",
+            HttpMethod = "Post",
+            OnSuccess = "hideVoteButton"
+        },
+            new {id = "vote-button", @class = "btn btn-danger"})
     }
 </div>
 <br />
-<div id="Comments">
+<div id="Comments" class="row">
     @foreach (var comment in Model.Comments)
     {
         @Html.Partial("_CommentPartial", comment)
@@ -38,10 +45,11 @@
 {
     using (Ajax.BeginForm("PostComment", new AjaxOptions { HttpMethod = "Post", InsertionMode = InsertionMode.InsertAfter, UpdateTargetId = "Comments", OnFailure = "commentPostFailure" }))
     {
-        @Html.Hidden("LaptopId", Model.Id)
+        @Html.Hidden("ArticleId", Model.Id)
         @Html.TextArea("comment")
         @Html.AntiForgeryToken()
-        <input type="submit" value="Submit comment" />
+   <br/>
+        <input type="submit" value="Comment" class="btn btn-default" />
     }
 }
 
