@@ -1,20 +1,23 @@
-﻿@model IEnumerable<ArticleSystem.Web.Models.Home.ArticleViewModel>
+﻿@using ArticleSystem.Models
+@model IEnumerable<ArticleSystem.Web.Models.Home.ArticleViewModel>
 @{
     ViewBag.Title = "Home Page";
 }
 
+<h1>Articles</h1>
+<hr />
+  
+<div class="row-fluid">
+        @foreach (var item in Model)
+        {
 
-
-<div class="row">
-    @foreach (var item in Model)
-    {
-
-        <div class="col-md-4">
-            <h2>@item.Name</h2>
-            <p>
-                @item.Price
-            </p>
-            <p><a class="btn btn-default" href="">Learn more &raquo;</a></p>
-        </div>
-    }
-</div>
+            <div class="col-md-4">
+                <h2>@item.Name</h2>
+                <p>Price:
+                    @item.Price
+                </p>
+                <p></p>
+                <p><a class="btn btn-default" href="@Url.Action("Details", "Article", new {id=  item.Id })">Learn more &raquo;</a></p>
+            </div>
+        }
+    </div>
