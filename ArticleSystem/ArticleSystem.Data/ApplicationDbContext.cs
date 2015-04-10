@@ -15,9 +15,13 @@ namespace ArticleSystem.Data
 
         public IDbSet<Article> Articles { get; set; }
         public IDbSet<Comment> Comments { get; set; }
-        public IDbSet<Vote> Votes { get; set; } 
+        public IDbSet<Vote> Votes { get; set; }
 
-
+        public override int SaveChanges()
+        {
+            
+            return base.SaveChanges();
+        }
         
         public static ApplicationDbContext Create()
         {

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArticleSystem.Models", "Art
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArticleSystem.Web", "ArticleSystem.Web\ArticleSystem.Web.csproj", "{957A931B-E21D-4900-BBB0-D65CFE3A545D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArticleSystem.Common", "ArticleSystem.Common\ArticleSystem.Common.csproj", "{10F45D3E-05CB-4C55-9413-66F8F31E66EC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{957A931B-E21D-4900-BBB0-D65CFE3A545D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{957A931B-E21D-4900-BBB0-D65CFE3A545D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{957A931B-E21D-4900-BBB0-D65CFE3A545D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10F45D3E-05CB-4C55-9413-66F8F31E66EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10F45D3E-05CB-4C55-9413-66F8F31E66EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10F45D3E-05CB-4C55-9413-66F8F31E66EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10F45D3E-05CB-4C55-9413-66F8F31E66EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
