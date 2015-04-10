@@ -3,12 +3,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ArticleSystem.Models
 {
-    public sealed class Article
+    public class Article
     {
+        private ICollection<Comment> _comments;
+        private ICollection<Vote> _votes;
+
        public Article()
         {
-            Comments=new HashSet<Comment>();
-            Votes = new HashSet<Vote>();
+            _comments=new HashSet<Comment>();
+            _votes = new HashSet<Vote>();
         }
 
         [Key]
@@ -25,9 +28,17 @@ namespace ArticleSystem.Models
 
         public string Url { get; set; }
 
-        public ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<Comment> Comments
+        {
+            get { return _comments; }
+            set { _comments = value; }
+        }
 
-        public ICollection<Vote> Votes { get; set; }
+        public virtual ICollection<Vote> Votes
+        {
+            get { return _votes; }
+            set { _votes = value; }
+        }
 
 
     }
