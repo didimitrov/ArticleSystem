@@ -87,10 +87,10 @@ namespace ArticleSystem.Common.Repository
             entry.State = EntityState.Detached;
         }
 
-        public int SaveChanges()
-        {
-            return Context.SaveChanges();
-        }
+        //public int SaveChanges()
+        //{
+        //    return Context.SaveChanges();
+        //}
 
         public void Dispose()
         {
