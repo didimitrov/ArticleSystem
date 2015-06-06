@@ -1,6 +1,9 @@
 namespace ArticleSystem.Data.Migrations
 {
+    using System;
+    using System.Data.Entity;
     using System.Data.Entity.Migrations;
+    using System.Linq;
 
     internal sealed class Configuration : DbMigrationsConfiguration<ArticleSystem.Data.ApplicationDbContext>
     {
@@ -8,6 +11,7 @@ namespace ArticleSystem.Data.Migrations
         {
             AutomaticMigrationsEnabled = true;
             ContextKey = "ArticleSystem.Data.ApplicationDbContext";
+            AutomaticMigrationDataLossAllowed = true;
         }
 
         protected override void Seed(ArticleSystem.Data.ApplicationDbContext context)

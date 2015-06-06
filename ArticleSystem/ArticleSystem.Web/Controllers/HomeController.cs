@@ -18,7 +18,7 @@ namespace ArticleSystem.Web.Controllers
         public ActionResult Index()
         {
             var articles = _article.All().OrderByDescending(article => article.Votes.Count)
-                .Select(x=> new ArticleViewModel
+                .Select(x => new ArticleViewModel
                 {
                     Id = x.Id,
                     Name = x.Name,
@@ -26,6 +26,7 @@ namespace ArticleSystem.Web.Controllers
                     Url = x.Url
                 }).ToList();
             return View(articles);
+           
         }
 
 
