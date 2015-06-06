@@ -19,6 +19,6 @@ namespace ArticleSystem.Common.Repository
 
         void Detach(T entity);
 
-        //int SaveChanges();
+        int SaveChanges();
     }
 }

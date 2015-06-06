@@ -24,17 +24,21 @@
     Votes: <span id="article-votes">@Model.Votes</span>
     @if (User.Identity.IsAuthenticated && Model.UserCanVote)
     {
-        @Ajax.ActionLink("Vote", "Vote", new {id = Model.Id}, new AjaxOptions
+        @Ajax.ActionLink("Vote", "Vote", "Article", new {id = Model.Id}, new AjaxOptions
         {
             InsertionMode = InsertionMode.Replace,
             UpdateTargetId = "article-votes",
             HttpMethod = "Post",
             OnSuccess = "hideVoteButton"
         },
-            new {id = "vote-button", @class = "btn btn-danger"})
+            new {id = "vote-button", @class = "btn btn-danger"});
     }
+
+
+
 </div>
-<br />
+<br /><hr />
+<h3>Comments:</h3>
 <div id="Comments" class="row">
     @foreach (var comment in Model.Comments)
     {
@@ -43,12 +47,17 @@
 </div>
 @if (User.Identity.IsAuthenticated)
 {
-    using (Ajax.BeginForm("PostComment", new AjaxOptions { HttpMethod = "Post", InsertionMode = InsertionMode.InsertAfter, UpdateTargetId = "Comments", OnFailure = "commentPostFailure" }))
-    {
+    using (Ajax.BeginForm("PostComment", new AjaxOptions 
+        {   
+            HttpMethod = "Post",
+            InsertionMode = InsertionMode.InsertAfter,
+            UpdateTargetId = "Comments",
+            OnFailure = "commentPostFailure" }))
+        {
         @Html.Hidden("ArticleId", Model.Id)
         @Html.TextArea("comment")
         @Html.AntiForgeryToken()
-   <br/>
+         <br/>
         <input type="submit" value="Comment" class="btn btn-default" />
     }
 }

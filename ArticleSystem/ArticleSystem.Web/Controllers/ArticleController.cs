@@ -39,6 +39,7 @@ namespace ArticleSystem.Web.Controllers
                     Description = x.Description,
                     ImageUrl = x.Url,
                     Name = x.Name,
+                    Id=x.Id,
                     Price = x.Price,
                     UserCanVote = x.Votes.All(pesho => pesho.VotedById != currentUserId),//todo: Remove this
                     Votes = x.Votes.Count()
@@ -46,30 +47,57 @@ namespace ArticleSystem.Web.Controllers
             return View(articleDetailaModel);
         }
 
+        [ValidateAntiForgeryToken]
         public ActionResult PostComment(SubmitCommentModel commentModel)
         {
             
 
             if (ModelState.IsValid)
             {
+                
                 var userName = User.Identity.GetUserName();
                 var userId = User.Identity.GetUserId();
                 _comment.Add(new Comment
                 {
+                    
                     AuthorId = userId,
                     Content = commentModel.Comment,
                     ArticleId = commentModel.ArticleId
                 });
                 //db.SaveChanges();
+                _comment.SaveChanges();
 
                 var viewModel = new CommentViewModel { AuthorUsername = userName, Content = commentModel.Comment };
                 return PartialView("_CommentPartial", viewModel);
             }
             return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest, ModelState.Values.First().ToString());
         }
-
+        [HttpPost]
         public ActionResult Vote(int id)
         {
+
+           
+            //var article = this._article.All().FirstOrDefault(x => x.Id == id);
+            //if (article != null)
+            //{
+            //    var userId = this.User.Identity.GetUserId();
+
+            //    var vote = new Vote
+            //    {
+            //        ArticleId = id,
+            //        VotedById = userId,
+                   
+            //    };
+
+            //    this._vote.Add(vote);
+            //    this._vote.SaveChanges();
+
+            //    var votes = _article.GetById(id).Votes.Count();
+
+            //    return Content(votes.ToString(CultureInfo.InvariantCulture));
+            //}
+
+            //return Content("Error");
 
             var userId = User.Identity.GetUserId();
 
@@ -77,16 +105,6 @@ namespace ArticleSystem.Web.Controllers
 
             if (canVote)
             {
-                //var art = _article.GetById(id);
-                //art.Votes.Add(new Vote
-                //{
-
-                //});
-                //_article.SaveChanges();
-
-
-
-
                 _article.GetById(id)
                     .Votes
                     .Add(new Vote
@@ -94,7 +112,7 @@ namespace ArticleSystem.Web.Controllers
                         ArticleId = id,
                         VotedById = userId
                     });
-                //_article.SaveChanges();
+                _vote.SaveChanges();
             }
 
             var votes = _article.GetById(id).Votes.Count();
