@@ -19,30 +19,33 @@
         { <div><strong>Description:</strong><br />@Model.Description</div> }
     </div>
 </div>
-
-<div>
-    Votes: <span id="article-votes">@Model.Votes</span>
-    @if (User.Identity.IsAuthenticated && Model.UserCanVote)
-    {
-        @Ajax.ActionLink("Vote", "Vote", "Article", new {id = Model.Id}, new AjaxOptions
+<br />
+<div class="row">
+    <div>
+        <strong>
+            Votes:  <span id="article-votes" class="text-danger">@Model.Votes</span>
+            @if (User.Identity.IsAuthenticated && Model.UserCanVote)
+            {
+                @Ajax.ActionLink("Vote", "Vote", "Article", new { id = Model.Id }, new AjaxOptions
         {
             InsertionMode = InsertionMode.Replace,
             UpdateTargetId = "article-votes",
             HttpMethod = "Post",
             OnSuccess = "hideVoteButton"
         },
-            new {id = "vote-button", @class = "btn btn-danger"});
-    }
+            new { id = "vote-button", @class = "btn btn-danger" });
+            }
 
 
-
-</div>
+        </strong>
+    </div>
+</div >
 <br /><hr />
 <h3>Comments:</h3>
 <div id="Comments" class="row">
     @foreach (var comment in Model.Comments)
     {
-        @Html.Partial("_CommentPartial", comment)
+        @Html.Partial("_CommentPartial", comment)<br/> 
     }
 </div>
 @if (User.Identity.IsAuthenticated)

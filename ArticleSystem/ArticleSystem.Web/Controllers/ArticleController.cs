@@ -6,6 +6,7 @@ using ArticleSystem.Common.Repository;
 using ArticleSystem.Data;
 using ArticleSystem.Models;
 using ArticleSystem.Web.Models.Aarticle;
+using ArticleSystem.Web.Models.Home;
 using Microsoft.AspNet.Identity;
 
 namespace ArticleSystem.Web.Controllers
@@ -24,6 +25,19 @@ namespace ArticleSystem.Web.Controllers
             _comment = comment;
         }
 
+        public ActionResult Index()
+        {
+            var articles = _article.All().OrderByDescending(article => article.Votes.Count)
+                .Select(x => new ArticleViewModel
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Price = x.Price,
+                    Url = x.Url
+                }).ToList();
+            return View(articles);
+           
+        }
         // GET: Article
         public ActionResult Details(int id)
         {
