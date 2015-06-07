@@ -50,16 +50,12 @@ namespace ArticleSystem.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult PostComment(SubmitCommentModel commentModel)
         {
-            
-
             if (ModelState.IsValid)
             {
-                
                 var userName = User.Identity.GetUserName();
                 var userId = User.Identity.GetUserId();
                 _comment.Add(new Comment
                 {
-                    
                     AuthorId = userId,
                     Content = commentModel.Comment,
                     ArticleId = commentModel.ArticleId
@@ -75,30 +71,6 @@ namespace ArticleSystem.Web.Controllers
         [HttpPost]
         public ActionResult Vote(int id)
         {
-
-           
-            //var article = this._article.All().FirstOrDefault(x => x.Id == id);
-            //if (article != null)
-            //{
-            //    var userId = this.User.Identity.GetUserId();
-
-            //    var vote = new Vote
-            //    {
-            //        ArticleId = id,
-            //        VotedById = userId,
-                   
-            //    };
-
-            //    this._vote.Add(vote);
-            //    this._vote.SaveChanges();
-
-            //    var votes = _article.GetById(id).Votes.Count();
-
-            //    return Content(votes.ToString(CultureInfo.InvariantCulture));
-            //}
-
-            //return Content("Error");
-
             var userId = User.Identity.GetUserId();
 
             var canVote = !_vote.All().Any(x => x.ArticleId == id && x.VotedById == userId);
