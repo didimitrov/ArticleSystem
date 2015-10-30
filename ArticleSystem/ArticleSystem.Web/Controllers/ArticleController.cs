@@ -15,14 +15,16 @@ namespace ArticleSystem.Web.Controllers
     {
         private readonly IRepository<Article> _article;
         private readonly IRepository<Vote> _vote;
-        private readonly IRepository<Comment> _comment; 
+        private readonly IRepository<Comment> _comment;
+        private readonly IRepository<Category> _categories; 
 
 
-        public ArticleController(IRepository<Article> article, IRepository<Vote> vote, IRepository<Comment> comment)
+        public ArticleController(IRepository<Article> article, IRepository<Vote> vote, IRepository<Comment> comment, IRepository<Category> categories)
         {
             _article = article;
             _vote = vote;
             _comment = comment;
+            _categories = categories;
         }
 
         public ActionResult Index()
@@ -104,6 +106,36 @@ namespace ArticleSystem.Web.Controllers
             var votes = _article.GetById(id).Votes.Count();
 
             return Content(votes.ToString(CultureInfo.InvariantCulture));
+        }
+
+        public ActionResult Search(ArticleSearchModel model)
+        {
+            // To Bind the category drop down in search section
+            ViewBag.Categories = _categories.All();
+
+            // Get Products
+            model.Articles = _article.All()
+                .Where(
+                    x =>
+                        (model.ProductName == null || x.Name.Contains(model.ProductName))
+                        && (model.Price == null || x.Price < model.Price)
+                        && (model.Category == null || x.CategoryId == model.Category)
+                )
+                //.OrderBy(model.Sort + " " + model.SortDir)
+                //.Skip((model.Page - 1) * model.PageSize)
+                //.Take(model.PageSize)
+                .ToList();
+
+            // total records for paging
+            model.TotalRecords = _article.All()
+                .Count(x =>
+                    (model.ProductName == null || x.Name.Contains(model.ProductName))
+                    && (model.Price == null || x.Price < model.Price)
+                    && (model.Category == null || x.CategoryId == model.Category)
+                );
+
+
+            return View(model);
         }
     }
 }

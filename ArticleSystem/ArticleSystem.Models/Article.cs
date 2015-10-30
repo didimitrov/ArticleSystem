@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace ArticleSystem.Models
@@ -41,5 +42,17 @@ namespace ArticleSystem.Models
         }
 
 
+
+
+      //  [Required]
+       // [Display(Name = "Category")]
+        public int CategoryId { get; set; }
+
+        public String Thumb { get; set; }
+
+        public virtual Category Category { get; set; } 
+
     }
+
+    
 }
