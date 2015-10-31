@@ -35,8 +35,9 @@ namespace ArticleSystem.Web.Controllers
                     Id = x.Id,
                     Name = x.Name,
                     Price = x.Price,
-                    Url = x.Url
-                }).ToList();
+                    Url = x.Url,
+                    Description = x.Description
+                    }).ToList();
             return View(articles);
            
         }

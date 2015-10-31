@@ -1,0 +1,55 @@
+﻿@using System.Web.Mvc.Html
+@model ArticleSystem.Models.ArticleSearchModel
+
+@{
+    ViewBag.Title = "Filterable";
+}
+
+<h2>Filterable</h2>
+
+@using (Html.BeginForm("Filterable", "Article", FormMethod.Get)) {
+<fieldset class="filtering">
+    <legend>Filter Product Results</legend>
+    <div>
+        <b>Show Products In:</b>
+     @*  @Html.DropDownListFor(model => model.CategoryId, Model.Category, "-- All Categories --")*@
+
+        <b>Minimum Price:</b>
+        @Html.TextBoxFor(model => model.Price, new { size = 8 })
+
+        <b>Omit Discontinued?</b>
+        @*<%: Html.CheckBoxFor(model => model.OmitDiscontinued) %>*@
+
+        <input type="submit" value="Filter Results" />
+    </div>
+</fieldset>
+ } 
+
+<table class="grid" style="width: 90%">
+<tr>
+    <th style="width: 35%">Product</th>
+    <th style="width: 25%">Category</th>
+    <th style="width: 25%">Qty/Unit</th>
+    <th style="width: 15%">Price</th>
+    <th style="width: 5%">Discontinued</th>
+</tr>
+
+@foreach (var item in Model.Articles)
+   { 
+
+<tr>
+    <td class="left">@item.Name</td>
+   @* <td class="left">@item.Category.Name</td>*@
+   @* <td class="left"><%: item.QuantityPerUnit%></td>*@
+    <td class="right">@String.Format("{0:C}", item.Price)</td>
+    @*<td>
+        <% if (item.Discontinued)
+        { %>
+        <img src="<%=Url.Content(" ~ />Content/cancel.png") %>" alt="Discontinued" title="Discontinued" />
+        <% } %>
+    </td>*@
+</tr>
+
+}
+
+</table>

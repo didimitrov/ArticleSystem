@@ -10,6 +10,7 @@ namespace ArticleSystem.Data.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = true;
         }
 
         protected override void Seed(ArticleSystem.Data.ApplicationDbContext context)
