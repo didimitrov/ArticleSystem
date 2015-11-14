@@ -214,6 +214,8 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\responsive-images.js" />
+    <Content Include="Scripts\thumbnail-gallery-script.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -252,6 +254,7 @@
     <Content Include="Views\Shared\_CommentPartial.cshtml" />
     <Content Include="Views\Article\Index.cshtml" />
     <Content Include="Views\Article\Search.cshtml" />
+    <Content Include="Views\Shared\_ThumbnailPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

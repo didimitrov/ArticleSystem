@@ -1,6 +1,8 @@
 ﻿body {
-    padding-top: 50px;
+    margin-top: 40px;
     padding-bottom: 20px;
+    padding-top: 50px;
+    word-wrap: break-word;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -22,3 +24,22 @@ select,
 textarea {
     max-width: 280px;
 }
+
+body img {
+    max-width: 100%;
+}
+
+.gallery-thumbnail {
+    width: 120px;
+    opacity: 0.5;
+    padding: 5px;
+}
+
+    .gallery-thumbnail:hover {
+        opacity: 0.8;
+    }
+
+    .gallery-thumbnail.selected {
+        opacity: 1;
+        border: 1px dashed grey;
+    }

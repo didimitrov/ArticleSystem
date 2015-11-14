@@ -1,0 +1,18 @@
+﻿@model ArticleSystem.Web.Models.Home.ArticleViewModel
+   @* @model ArticleSystem.Web.Models.Product.ProductThumbnailModel*@
+    @{
+       
+       
+            <div class="col-sm-4 item">
+                <h4 class="text-center text-info">@Model.Name</h4>
+                <a href="">
+                    @*@Html.Image(@Model.Image.Url, @Model.Image.FileName, new { @class = "img-rounded" })*@
+                    <img src="@Model.Url" alt="@Model.Name" />
+                </a>
+                <div class="text-center">
+                    <p>Price: @string.Format("{0:C0}", Model.Price)</p>
+                    <a href="@Url.Action("Details", "Article", new {id=  Model.Id })" class="btn btn-info">Details</a>
+                </div>
+            </div>
+        
+    }
