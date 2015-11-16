@@ -263,6 +263,7 @@
     <Content Include="Views\Article\Search.cshtml" />
     <Content Include="Views\Shared\_ThumbnailPartial.cshtml" />
     <Content Include="Views\Shared\_ArticlePartial.cshtml" />
+    <Content Include="Views\Shared\_PostCommentPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,12 +1,10 @@
-﻿@model ArticleSystem.Web.Models.Home.ArticleViewModel
-   @* @model ArticleSystem.Web.Models.Product.ProductThumbnailModel*@
+﻿@*@model ArticleSystem.Web.Models.Home.ArticleViewModel
     @{
        
        
             <div class="col-sm-4 item">
                 <h4 class="text-center text-info">@Model.Name</h4>
                 <a href="">
-                    @*@Html.Image(@Model.Image.Url, @Model.Image.FileName, new { @class = "img-rounded" })*@
                     <img src="@Model.Url" alt="@Model.Name" />
                 </a>
                 <div class="text-center">
@@ -15,4 +13,4 @@
                 </div>
             </div>
         
-    }
+    }*@

@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
@@ -88,6 +89,7 @@ namespace ArticleSystem.Web.Controllers
             return View(articleDetailsModel);
         }
 
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult PostComment(SubmitCommentModel commentModel)
         {
@@ -99,12 +101,17 @@ namespace ArticleSystem.Web.Controllers
                 {
                     AuthorId = userId,
                     Content = commentModel.Comment,
-                    ArticleId = commentModel.ArticleId
+                    ArticleId = commentModel.ArticleId,
+                    CreatedAt = DateTime.Now
                 });
-                //db.SaveChanges();
+
+                var article = _articles.All().FirstOrDefault(x => x.Id == commentModel.ArticleId);
+               
+                //this.Data.SaveChanges();
                 _comment.SaveChanges();
 
                 var viewModel = new CommentViewModel { AuthorUsername = userName, Content = commentModel.Comment };
+              
                 return PartialView("_CommentPartial", viewModel);
             }
             return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest, ModelState.Values.First().ToString());

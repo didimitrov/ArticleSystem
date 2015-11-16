@@ -1,69 +1,72 @@
-﻿@model ArticleSystem.Web.Models.Aarticle.ArticleDetailsViewModel
+﻿@using ArticleSystem.Web.Models.Aarticle
+@model ArticleDetailsViewModel
 
 @{
     ViewBag.Title = "Details";
 }
 
 
-@*<h2>@Model.Name</h2>
+<h1>@Model.Name</h1>
+
 <div class="row">
-    <div class="span4">
-        
-        <div><strong>Price:</strong> $@Model.Price</div>
-    </div>
-    <div class="span4">
-        <img src="@Model.ImageUrl" alt="@Model.Name" />
-    </div>
-    <div class="span4">     
-        @if (!string.IsNullOrEmpty(Model.Description))
-        { <div><strong>Description:</strong><br />@Model.Description</div> }
-    </div>
-</div>
-<br />
-<div class="row">
-    <div>
-        <strong>
-            Votes:  <span id="article-votes" class="text-danger">@Model.Votes</span>
+    <div class="col col-md-6 col-md-offset-3">
+        <div class="text-center">
+            <h4>Price: $@Model.Price</h4>
+        </div>
+        <div class="col col-md-12 thumbnail">
+            <img src="@Model.ImageUrl" alt="@Model.Name" />
+        </div>
+        <div class="col-md-12 text-center ">
+
+            <h4> Votes:  <span id="article-votes" class="text-danger">@Model.Votes</span></h4>
             @if (User.Identity.IsAuthenticated && Model.UserCanVote)
             {
                 @Ajax.ActionLink("Vote", "Vote", "Article", new { id = Model.Id }, new AjaxOptions
-        {
-            InsertionMode = InsertionMode.Replace,
-            UpdateTargetId = "article-votes",
-            HttpMethod = "Post",
-            OnSuccess = "hideVoteButton"
-        },
-            new { id = "vote-button", @class = "btn btn-danger" });
+            {
+                InsertionMode = InsertionMode.Replace,
+                UpdateTargetId = "article-votes",
+                HttpMethod = "Post",
+                OnSuccess = "hideVoteButton"
+            },
+                new { id = "vote-button", @class = "btn btn-danger" })
             }
 
-
-        </strong>
+        </div>
     </div>
+</div>
+
+<br />
+<div class="row text-center">
+   
+    @if (!string.IsNullOrEmpty(Model.Description))
+    {
+        <h4>Description:<br />@Model.Description</h4>
+    }
 </div >
+
 <br /><hr />
-<h3>Comments:</h3>
-<div id="Comments" class="row">
+
+@if (Model.Comments.Count!=0)
+{
+    <h3>Comments..</h3>
+}
+
+<div id="Comments" class="row">   
     @foreach (var comment in Model.Comments)
     {
         @Html.Partial("_CommentPartial", comment)<br/> 
     }
 </div>
-@if (User.Identity.IsAuthenticated)
-{
-    using (Ajax.BeginForm("PostComment", new AjaxOptions 
-        {   
-            HttpMethod = "Post",
-            InsertionMode = InsertionMode.InsertAfter,
-            UpdateTargetId = "Comments",
-            OnFailure = "commentPostFailure" }))
-        {
-        @Html.Hidden("ArticleId", Model.Id)
-        @Html.TextArea("comment")
-        @Html.AntiForgeryToken()
-         <br/>
-        <input type="submit" value="Comment" class="btn btn-default" />
-    }
-}
+
+<div class="row">
+    @Html.Partial("_PostCommentPartial", new ArticleDetailsViewModel())
+</div>
+<div class="row">
+    <p>
+        @Html.ActionLink("Back to Home", "Index", "Home")
+    </p>
+</div>
+
 
 @section scripts{
     <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
@@ -76,140 +79,12 @@
             $("#vote-button").hide();
         }
     </script>
-}*@
-
-<div id="product-wrapper">
-    <div class="row">
-        @*@Html.Partial("_ImageGalleryPartial", Model)*@
-        <div class="col-sm-7">
-            <h4> @Model.Name</h4>
-           <img src="@Model.ImageUrl"/>
-            <hr />
-            <p class="info text-justify">@Model.Description</p>
-            <div id="social-container" class="pull-right">
-               @* @Html.Partial("_SocialSharerPartial")*@
-            </div>
-            <hr />
-            @using (Ajax.BeginForm("Add", "Cart", new { area = string.Empty }, new AjaxOptions { HttpMethod = "POST", UpdateTargetId = "order-count", InsertionMode = InsertionMode.Replace, Confirm = "Are you sure you want to add this item to the shopping Cart" }, new { id = "buy-form" }))
-            {
-                @Html.AntiForgeryToken()
-
-                <div class="form-group">
-                    @Html.HiddenFor(m => m.Id)
-                  @*  @Html.LabelFor(m => m.OrderQuantity, new { @class = "col-sm-2 control-label" })*@
-                    <div class="col-sm-2">
-                    @*    @Html.TextBoxFor(m => m.OrderQuantity, new { @class = "form-control", type = "number" })*@
-                    </div>
-                    @if (Request.IsAuthenticated)
-                    {
-                        <input type="submit" class="btn btn-success" value="Buy" />
-                    }
-                    else
-                    {
-                        @Html.ActionLink("Buy", "Login", "Account", new { area = string.Empty }, new { @class = "btn btn-warning" })
-                    }
-                </div>
-                <div class="row">
-                  @*  @Html.ValidationMessageFor(model => model.OrderQuantity, string.Empty, new { @class = "text-danger col-sm-offset-1" })*@
-                </div>
-                <div id="results"></div>
-
-            }
-        </div>
-    </div>
-</div>
-<hr />
-<div class="row" id="leave-review-wrapper"></div>
-<div class="row" id="reviews-wrapper">
-</div>
-<button class="btn btn-success" id="review-button">Show reviews</button>
-<button class="btn btn-success" id="leave-review-button">Leave review</button>
-
-@section scripts {
-    @Scripts.Render("~/bundles/jqueryval")
 }
 
-<script>
-    var currentReviewPage = 0;
-    var url = '@Url.Action("GetReviews", "Reviews", new { area = string.Empty, productId = @Model.Id })';
-    var leaveReviewUrl = '@Url.Action("LeaveReview", "Reviews", new { area = string.Empty, productId = @Model.Id })';
-    var $leaveReviewContainer = $('#leave-review-wrapper');
-    var $leaverReviewButton = $('#leave-review-button');
-    var $reviewContainer = $('#reviews-wrapper');
-    var $reviewbutton = $("#review-button");
-    var allReviewsAreDownloaded = false;
-    var readReviewsClicked = false;
 
-    $(window).scroll(function () {
-        if ($(window).scrollTop() == $(document).height() - $(window).height()) {
-            if (!allReviewsAreDownloaded) {
-                if (readReviewsClicked) {
-                    appendMoreReviews();
-                }
-            }
-        }
-    });
 
-    var reviewLoaded = function () {
-        $(".leave-rating").rating({
-            min: 0,
-            max: 5,
-            step: 1,
-            size: 'xs',
-            showClear: false,
-            showCaption: false,
-        });
-    }
+@*@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}*@
 
-    var loadReviewForm = function () {
-        $leaverReviewButton.remove();
-        $.ajax(
-        {
-            url: leaveReviewUrl,
-            type: "GET",
-            success: function(data) {
-                var $data = $(data);
-                $reviewContainer.append($data);
-                reviewLoaded();
-            }
-        });
-    }
-
-    var appendMoreReviews = function() {
-        readReviewsClicked = true;
-        $.ajax(
-        {
-            url: url + "&page=" + currentReviewPage,
-            type: "GET",
-            success: function(data) {
-                if (data.length > 10) {
-                    var $data = $(data);
-                    $reviewContainer.append($data);
-                    currentReviewPage += 1;
-                    $(".rating").rating({
-                        min: 0,
-                        max: 5,
-                        step: 1,
-                        size: 'xs',
-                        disabled: true,
-                        showClear: false,
-                        showCaption: false,
-                        readonly: true
-                    });
-                } else if (currentReviewPage > 0) {
-                    $reviewContainer.append('@Html.Label("There are no more reviews", new { @class = "text-warning"})');
-                    $reviewbutton.remove();
-                    allReviewsAreDownloaded = true;
-                } else {
-                    $reviewContainer.append('@Html.Label("There are no reviews for this product")');
-                    $reviewbutton.remove();
-                    allReviewsAreDownloaded = true;
-                }
-            }
-        });
-    };
-
-    $reviewbutton.on("click", appendMoreReviews);
-    $leaverReviewButton.on("click", loadReviewForm);
-</script>
-https://www.dropbox.com/s/mkko460epjjmldg/05.jpg?dl=0
+@*https://www.dropbox.com/s/mkko460epjjmldg/05.jpg?dl=0*@

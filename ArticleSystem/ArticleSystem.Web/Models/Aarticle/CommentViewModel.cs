@@ -7,6 +7,17 @@ namespace ArticleSystem.Web.Models.Aarticle
 {
     public class CommentViewModel: IMapFrom<Comment>, IHaveCustomMappings
     {
+
+        // public CommentViewModel()
+        //{
+        //}
+
+        //public CommentViewModel(int articleId)
+        //{
+        //    this.ArticleId = articleId;
+        //}
+
+
         public int Id { get; set; }
 
         public int ArticleId { get; set; }
@@ -20,7 +31,8 @@ namespace ArticleSystem.Web.Models.Aarticle
         public void CreateMappings(IConfiguration configuration)
         {
             configuration.CreateMap<Comment, CommentViewModel>()
-                .ForMember(x => x.AuthorUsername, options => options.MapFrom(x => x.User.UserName));
+                .ForMember(x => x.AuthorUsername, options => options.MapFrom(x => x.User.UserName))
+                .ForMember(x=>x.Content, opt=>opt.MapFrom(x=>x.Content));
         }
     }
 }
