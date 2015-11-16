@@ -5,7 +5,7 @@ using AutoMapper;
 
 namespace ArticleSystem.Web.Models.Aarticle
 {
-    public class CommentViewModel: IMapFrom<Comment>, IHaveCustomMappings
+    public class CommentViewModel: IMapFrom<Comment> //IHaveCustomMappings
     {
 
         // public CommentViewModel()
@@ -32,7 +32,7 @@ namespace ArticleSystem.Web.Models.Aarticle
         {
             configuration.CreateMap<Comment, CommentViewModel>()
                 .ForMember(x => x.AuthorUsername, options => options.MapFrom(x => x.User.UserName))
-                .ForMember(x=>x.Content, opt=>opt.MapFrom(x=>x.Content));
+                .ForMember(x => x.Content, opt => opt.MapFrom(x => x.Content));
         }
     }
 }

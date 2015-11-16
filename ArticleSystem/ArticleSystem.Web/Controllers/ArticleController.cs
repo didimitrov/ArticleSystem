@@ -17,15 +17,15 @@ namespace ArticleSystem.Web.Controllers
     {
         private readonly IRepository<Article> _articles;
         private readonly IRepository<Vote> _vote;
-        private readonly IRepository<Comment> _comment;
+        private readonly IRepository<Comment> _comments;
         //private readonly IRepository<Category> _categories; 
 
 
-        public ArticleController(IRepository<Article> articles, IRepository<Vote> vote, IRepository<Comment> comment)
+        public ArticleController(IRepository<Article> articles, IRepository<Vote> vote, IRepository<Comment> comments)
         {
             _articles = articles;
             _vote = vote;
-            _comment = comment;
+            _comments = comments;
         }
 
         //public ActionResult Index()
@@ -97,8 +97,9 @@ namespace ArticleSystem.Web.Controllers
             {
                 var userName = User.Identity.GetUserName();
                 var userId = User.Identity.GetUserId();
-                _comment.Add(new Comment
+                _comments.Add(new Comment
                 {
+                    //Id = commentModel.Id,
                     AuthorId = userId,
                     Content = commentModel.Comment,
                     ArticleId = commentModel.ArticleId,
@@ -107,13 +108,12 @@ namespace ArticleSystem.Web.Controllers
 
                 var article = _articles.All().FirstOrDefault(x => x.Id == commentModel.ArticleId);
                
-                //this.Data.SaveChanges();
-                _comment.SaveChanges();
+               _comments.SaveChanges();
 
                 var viewModel = new CommentViewModel { AuthorUsername = userName, Content = commentModel.Comment };
-              
                 return PartialView("_CommentPartial", viewModel);
             }
+
             return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest, ModelState.Values.First().ToString());
         }
 

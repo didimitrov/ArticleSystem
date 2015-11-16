@@ -59,7 +59,25 @@
 </div>
 
 <div class="row">
-    @Html.Partial("_PostCommentPartial", new ArticleDetailsViewModel())
+    <p>Leave a comment:</p>
+    @if (User.Identity.IsAuthenticated)
+    {
+        using (Ajax.BeginForm("PostComment", "Article", new { id = Model.Id }, new AjaxOptions
+        {
+            HttpMethod = "Post",
+            InsertionMode = InsertionMode.InsertAfter,
+            UpdateTargetId = "Comments",
+            OnFailure = "commentPostFailure"
+        }))
+        {
+            @Html.Hidden("ArticleId", Model.Id)
+            @Html.TextArea("comment")
+            @Html.AntiForgeryToken()
+            <br />
+            <input type="submit" value="Comment" class="btn btn-default" />
+        }
+    }
+    <br />
 </div>
 <div class="row">
     <p>

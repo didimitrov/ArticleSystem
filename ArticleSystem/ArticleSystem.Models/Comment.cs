@@ -17,8 +17,7 @@ namespace ArticleSystem.Models
 
         public int ArticleId { get; set; }
         public virtual Article Article { get; set; }
-        
-        [Required]
+               
         public DateTime CreatedAt { get; set; }
     }
 }

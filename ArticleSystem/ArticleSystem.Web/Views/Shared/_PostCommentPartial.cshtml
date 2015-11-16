@@ -1,21 +1,3 @@
 ﻿@model ArticleSystem.Web.Models.Aarticle.ArticleDetailsViewModel
 
-<p>Leave a comment:</p>
-@if (User.Identity.IsAuthenticated)
-{
-    using (Ajax.BeginForm("PostComment", new AjaxOptions
-    {
-        HttpMethod = "Post",
-        InsertionMode = InsertionMode.InsertAfter,
-        UpdateTargetId = "Comments",
-        OnFailure = "commentPostFailure"
-    }))
-    {
-        @Html.Hidden("ArticleId", Model.Id)
-        @Html.TextArea("comment")
-        @Html.AntiForgeryToken()
-        <br />
-        <input type="submit" value="Comment" class="btn btn-default" />
-    }
-}
-<br />
+
