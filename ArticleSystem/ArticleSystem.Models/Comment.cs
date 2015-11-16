@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace ArticleSystem.Models
 {
@@ -7,7 +8,8 @@ namespace ArticleSystem.Models
         [Key]
         public int Id { get; set; }
 
-        [Required]
+        [MinLength(5)]
+        [MaxLength(100)]
         public string Content { get; set; }
 
         public string AuthorId { get; set; }
@@ -15,5 +17,8 @@ namespace ArticleSystem.Models
 
         public int ArticleId { get; set; }
         public virtual Article Article { get; set; }
+        
+        [Required]
+        public DateTime CreatedAt { get; set; }
     }
 }

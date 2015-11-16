@@ -30,7 +30,7 @@ namespace ArticleSystem.Web.Controllers
         public ActionResult Index()
         {
             var articles = _article.All().OrderByDescending(article => article.Votes.Count)
-                .Select(x => new ArticleViewModel
+                .Select(x => new ArticleHomeViewModel
                 {
                     Id = x.Id,
                     Name = x.Name,

@@ -59,6 +59,7 @@
     <Compile Include="ArticleSearchModel.cs" />
     <Compile Include="Category.cs" />
     <Compile Include="Comment.cs" />
+    <Compile Include="Manufacturer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Vote.cs" />
   </ItemGroup>

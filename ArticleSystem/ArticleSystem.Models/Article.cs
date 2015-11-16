@@ -17,8 +17,10 @@ namespace ArticleSystem.Models
 
         [Key]
         public int Id { get; set; }
-
+        
         [Required]
+        [MinLength(3)]
+        [MaxLength(255)]
         public string Name { get; set; }
 
         [Required]
@@ -28,6 +30,10 @@ namespace ArticleSystem.Models
         public decimal Price { get; set; }
 
         public string Url { get; set; }
+        //[DataType(DataType.Upload)]
+        //public byte[] Image { get; set; }
+
+        public bool IsAvalible { get; set; }
 
         public virtual ICollection<Comment> Comments
         {
@@ -41,16 +47,12 @@ namespace ArticleSystem.Models
             set { _votes = value; }
         }
 
-
-
-
-      //  [Required]
-       // [Display(Name = "Category")]
         public int CategoryId { get; set; }
+
+        public virtual Category Category { get; set; }
 
         public String Thumb { get; set; }
 
-        public virtual Category Category { get; set; } 
 
     }
 

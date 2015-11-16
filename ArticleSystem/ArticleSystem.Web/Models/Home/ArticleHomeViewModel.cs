@@ -2,7 +2,7 @@
 
 namespace ArticleSystem.Web.Models.Home
 {
-    public class ArticleViewModel
+    public class ArticleHomeViewModel
     {
         public int Id { get; set; }
 
