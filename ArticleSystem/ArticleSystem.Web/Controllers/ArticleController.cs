@@ -7,61 +7,85 @@ using ArticleSystem.Data;
 using ArticleSystem.Models;
 using ArticleSystem.Web.Models.Aarticle;
 using ArticleSystem.Web.Models.Home;
+using AutoMapper.QueryableExtensions;
 using Microsoft.AspNet.Identity;
 
 namespace ArticleSystem.Web.Controllers
 {
-    public class ArticleController : Controller
+    public class ArticleController : BaseController
     {
-        private readonly IRepository<Article> _article;
+        private readonly IRepository<Article> _articles;
         private readonly IRepository<Vote> _vote;
         private readonly IRepository<Comment> _comment;
-        private readonly IRepository<Category> _categories; 
+        //private readonly IRepository<Category> _categories; 
 
 
-        public ArticleController(IRepository<Article> article, IRepository<Vote> vote, IRepository<Comment> comment, IRepository<Category> categories)
+        public ArticleController(IRepository<Article> articles, IRepository<Vote> vote, IRepository<Comment> comment)
         {
-            _article = article;
+            _articles = articles;
             _vote = vote;
             _comment = comment;
-            _categories = categories;
         }
 
-        public ActionResult Index()
-        {
-            var articles = _article.All().OrderByDescending(article => article.Votes.Count)
-                .Select(x => new ArticleHomeViewModel
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    Price = x.Price,
-                    Url = x.Url,
-                    Description = x.Description
-                    }).ToList();
-            return View(articles);
+        //public ActionResult Index()
+        //{
+        //    var articles = _article.All().OrderByDescending(article => article.Votes.Count)
+        //        .Select(x => new ArticleHomeViewModel
+        //        {
+        //            Id = x.Id,
+        //            Name = x.Name,
+        //            Price = x.Price,
+        //            Url = x.Url,
+        //            Description = x.Description
+        //            }).ToList();
+        //    return View(articles);
            
-        }
+        //}
+
         // GET: Article
         public ActionResult Details(int id)
         {
             var currentUserId = User.Identity.GetUserId();
-            var articleDetailaModel = _article.All().Where(article => article.Id == id)
-                .Select(x => new ArticleDetailsViewModel
-                {
-                    Comments = x.Comments.Select(y => new CommentViewModel
-                    {
-                        AuthorUsername = y.User.UserName,
-                        Content = y.Content
-                    }).ToList(),
-                    Description = x.Description,
-                    ImageUrl = x.Url,
-                    Name = x.Name,
-                    Id=x.Id,
-                    Price = x.Price,
-                    UserCanVote = x.Votes.All(pesho => pesho.VotedById != currentUserId),//todo: Remove this
-                    Votes = x.Votes.Count()
-                }).FirstOrDefault();
-            return View(articleDetailaModel);
+            //var articleDetailsModel = _article.All().Where(article => article.Id == id)
+            //    .Select(x => new ArticleDetailsViewModel
+            //    {
+            //        Comments = x.Comments.Select(y => new CommentViewModel
+            //        {
+            //            AuthorUsername = y.User.UserName,
+            //            Content = y.Content
+            //        }).ToList(),
+            //        Description = x.Description,
+            //        ImageUrl = x.Url,
+            //        Name = x.Name,
+            //        Id=x.Id,
+            //        Price = x.Price,
+            //        UserCanVote = x.Votes.All(pesho => pesho.VotedById != currentUserId),//todo: Remove this
+            //        Votes = x.Votes.Count()
+            //    }).FirstOrDefault();
+
+            var articleDetailsModel =
+                this._articles.All()
+                .Where(x => x.Id == id)
+                .ProjectTo<ArticleDetailsViewModel>()
+                .FirstOrDefault();
+
+            if (articleDetailsModel == null)
+            {
+                return HttpNotFound();
+            }
+
+            var comments =
+                this.Data.Comments.All()
+                    .Where(x => x.ArticleId == articleDetailsModel.Id)
+                    .ProjectTo<CommentViewModel>()
+                    .ToList();
+
+            articleDetailsModel.Comments = comments;
+
+            var categories = this.Data.Categories.All().ProjectTo<CategoryViewModel>();
+            this.ViewData.Add("Categories", categories);
+
+            return View(articleDetailsModel);
         }
 
         [ValidateAntiForgeryToken]
@@ -85,6 +109,7 @@ namespace ArticleSystem.Web.Controllers
             }
             return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest, ModelState.Values.First().ToString());
         }
+
         [HttpPost]
         public ActionResult Vote(int id)
         {
@@ -94,7 +119,7 @@ namespace ArticleSystem.Web.Controllers
 
             if (canVote)
             {
-                _article.GetById(id)
+                _articles.GetById(id)
                     .Votes
                     .Add(new Vote
                     {
@@ -104,7 +129,7 @@ namespace ArticleSystem.Web.Controllers
                 _vote.SaveChanges();
             }
 
-            var votes = _article.GetById(id).Votes.Count();
+            var votes = _articles.GetById(id).Votes.Count();
 
             return Content(votes.ToString(CultureInfo.InvariantCulture));
         }
@@ -112,10 +137,10 @@ namespace ArticleSystem.Web.Controllers
         public ActionResult Search(ArticleSearchModel model)
         {
             // To Bind the category drop down in search section
-            ViewBag.Categories = _categories.All();
+            ViewBag.Categories = this.Data.Categories.All();
 
             // Get Products
-            model.Articles = _article.All()
+            model.Articles = _articles.All()
                 .Where(
                     x =>
                         (model.ProductName == null || x.Name.Contains(model.ProductName))
@@ -128,7 +153,7 @@ namespace ArticleSystem.Web.Controllers
                 .ToList();
 
             // total records for paging
-            model.TotalRecords = _article.All()
+            model.TotalRecords = _articles.All()
                 .Count(x =>
                     (model.ProductName == null || x.Name.Contains(model.ProductName))
                     && (model.Price == null || x.Price < model.Price)

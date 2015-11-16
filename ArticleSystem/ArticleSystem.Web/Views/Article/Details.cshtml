@@ -82,8 +82,8 @@
     <div class="row">
         @*@Html.Partial("_ImageGalleryPartial", Model)*@
         <div class="col-sm-7">
-            <h4>@Model.ImageUrl @Model.Name</h4>
-           
+            <h4> @Model.Name</h4>
+           <img src="@Model.ImageUrl"/>
             <hr />
             <p class="info text-justify">@Model.Description</p>
             <div id="social-container" class="pull-right">

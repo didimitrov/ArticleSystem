@@ -1,12 +1,32 @@
-﻿
+﻿@model IEnumerable<ArticleSystem.Web.Models.Home.ArticleHomeViewModel>
+@{
+    ViewBag.Title = "Home Page";
+}
 
-    @{
-        ViewBag.Title = "Home Page";
-    }
+<div class="well">
+    <div class="row">
+        <div class="col-md-3">
+            @*   @Html.Partial("_PartialPageCategories", @ViewData["Categories"])*@
+            <p>categories</p>
+        </div>
+        <div class="col-md-6">
+            <h2 class="text-center">New article</h2>
+            @for (int i = 0; i < Model.Count(); i++)
+            {
+                var article = Model.ElementAt(i);
+                @Html.Partial("_ArticlePartial", article)
+            }
+        </div>
+        <div class="col-md-3">
+            @*@Html.Partial("_RightSideBar");*@ 
+            <p>Sidebar</p>
+        </div>
+    </div>
+</div>
 
-    <div class="jumbotron">
+    @*<div class="jumbotron">
         <h1>My Articles</h1>
     </div>
     <div class="clearfix">
     @Html.ActionLink("View all articles...", "Index", "Article", null, new { @class = "btn btn-info pull-right" })
-    </div>
+    </div>*@

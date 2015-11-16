@@ -30,8 +30,8 @@ namespace ArticleSystem.Models
         public decimal Price { get; set; }
 
         public string Url { get; set; }
-        //[DataType(DataType.Upload)]
-        //public byte[] Image { get; set; }
+        [DataType(DataType.Upload)]
+        public byte[] Image { get; set; }
 
         public bool IsAvalible { get; set; }
 

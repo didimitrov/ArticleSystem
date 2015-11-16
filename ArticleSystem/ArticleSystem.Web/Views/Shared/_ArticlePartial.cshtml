@@ -1,0 +1,17 @@
+﻿@model ArticleSystem.Web.Models.Home.ArticleHomeViewModel
+
+<div class="col-md-6">
+    <div class="thumbnail">
+        <h4 class="modal-header">@Model.Name</h4>
+      @*  <img src="@Url.Action("GetImage", "Home", new { id = Model.Id })" alt="@Model.Name" class="img-responsive img-thumbnail" style="width:70%; height:70%" />*@
+            <img src="@Model.Url" style="max-height: 100px"/>
+            <div class="caption text-center">
+            <p>
+                <a href="@Url.Action("Details", "Article", new { Model.Id })" class="btn btn-primary" role="button">View</a>
+               </p>
+            <span class="btn btn-default" type="button">
+                Price: <span class="badge">$@Model.Price</span>
+            </span>
+        </div>
+    </div>
+</div>
