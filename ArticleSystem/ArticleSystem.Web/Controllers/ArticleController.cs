@@ -4,12 +4,14 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
+using System.Web;
 using System.Web.Mvc;
 using ArticleSystem.Common.Repository;
 using ArticleSystem.Data;
 using ArticleSystem.Models;
 using ArticleSystem.Web.Models.Aarticle;
 using ArticleSystem.Web.Models.Home;
+using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNet.Identity;
 
@@ -49,35 +51,11 @@ namespace ArticleSystem.Web.Controllers
         public ActionResult Details(int id)
         {
             var currentUserId = User.Identity.GetUserId();
-            //var articleDetailsModel = _article.All().Where(article => article.Id == id)
-            //    .Select(x => new ArticleDetailsViewModel
-            //    {
-            //        Comments = x.Comments.Select(y => new CommentViewModel
-            //        {
-            //            AuthorUsername = y.User.UserName,
-            //            Content = y.Content
-            //        }).ToList(),
-            //        Description = x.Description,
-            //        ImageUrl = x.Url,
-            //        Name = x.Name,
-            //        Id=x.Id,
-            //        Price = x.Price,
-            //        UserCanVote = x.Votes.All(pesho => pesho.VotedById != currentUserId),//todo: Remove this
-            //        Votes = x.Votes.Count()
-            //    }).FirstOrDefault();
-
-            var articleDetailsModel =
-                this._articles.All()
-                .Where(x => x.Id == id)
-                .ProjectTo<ArticleDetailsViewModel>()
-                .FirstOrDefault();
-
-
-
-            if (articleDetailsModel == null)
-            {
-                return HttpNotFound();
-            }
+            
+            var article = _articles.All().FirstOrDefault(x => x.Id == id);
+            var articleDetailsModel = Mapper.Map<ArticleDetailsViewModel>(article);
+            
+            articleDetailsModel.UserCanVote = article.Votes.All(x => x.VotedById != currentUserId);
 
             var comments =
                 this.Data.Comments.All()
@@ -94,55 +72,78 @@ namespace ArticleSystem.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public ActionResult PostComment(SubmitCommentModel commentModel)
         {
-            if (ModelState.IsValid)
+            //if (ModelState.IsValid)
+            //{
+            //    var userName = User.Identity.GetUserName();
+            //    var userId = User.Identity.GetUserId();
+            //    _comments.Add(new Comment
+            //    {
+            //        //Id = commentModel.Id,
+            //        AuthorId = userId,
+            //        Content = commentModel.Comment,
+            //        ArticleId = commentModel.ArticleId,
+            //        CreatedAt = DateTime.Now
+            //    });
+            //   _comments.SaveChanges();
+
+            //    var viewModel = new CommentViewModel { AuthorUsername = userName, Content = commentModel.Comment };
+            //    return PartialView("_CommentPartial", viewModel);
+            //}
+            //return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest, ModelState.Values.First().ToString());
+
+            if (commentModel != null && this.ModelState.IsValid)
             {
-                var userName = User.Identity.GetUserName();
-                var userId = User.Identity.GetUserId();
-                _comments.Add(new Comment
+
+                Comment databaseComment = new Comment();
+                databaseComment.Content = commentModel.Comment;
+                databaseComment.ArticleId = commentModel.ArticleId;
+                databaseComment.CreatedAt = DateTime.Now;
+                var article = this.Data.Articles.GetById(commentModel.ArticleId);
+                if (article == null)
                 {
-                    //Id = commentModel.Id,
-                    AuthorId = userId,
-                    Content = commentModel.Comment,
-                    ArticleId = commentModel.ArticleId,
-                    CreatedAt = DateTime.Now
-                });
+                    throw new HttpException(404, "Product not found!");
+                }
 
-                var article = _articles.All().FirstOrDefault(x => x.Id == commentModel.ArticleId);
-               
-               _comments.SaveChanges();
+                article.Comments.Add(databaseComment);
+                this.Data.SaveChanges();
 
-                var viewModel = new CommentViewModel { AuthorUsername = userName, Content = commentModel.Comment };
-                return PartialView("_CommentPartial", viewModel);
+               // return PartialView("_ProductCommentsPartial", product.Comments.AsQueryable().Project().To<CommentViewModel>());
+
+                return this.PartialView("_CommentPartial", article.Comments.AsQueryable().ProjectTo<CommentViewModel>());
             }
 
-            return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest, ModelState.Values.First().ToString());
+            return this.Json("Error");
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult Vote(int id)
         {
-            var userId = User.Identity.GetUserId();
 
-            var canVote = !Data.Votes.All().Any(x => x.ArticleId == id && x.VotedById == userId);
+            var article = _articles.All().SingleOrDefault(x => x.Id == id);
 
-            if (canVote)
+            if (article != null)
             {
-                _articles.GetById(id)
-                    .Votes
-                    .Add(new Vote
+                var userHasVoted = article.Votes.Any(x => x.VotedById == this.User.Identity.GetUserId());
+                if (!userHasVoted)
+                {
+                    this.Data.Votes.Add(new Vote
                     {
                         ArticleId = id,
-                        VotedById = userId
+                        VotedById = User.Identity.GetUserId()
                     });
-                Data.Votes.SaveChanges();
+                    this.Data.SaveChanges();
+                }
+
+                var votesCount = article.Votes.Count();
+                return this.Content(votesCount.ToString());
             }
 
-            var votes = _articles.GetById(id).Votes.Count();
-
-            return Content(votes.ToString(CultureInfo.InvariantCulture));
+            return new EmptyResult(); 
         }
 
         public ActionResult Search(ArticleSearchModel model)

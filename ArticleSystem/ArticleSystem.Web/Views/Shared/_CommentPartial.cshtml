@@ -1,6 +1,19 @@
-﻿@model ArticleSystem.Web.Models.Aarticle.CommentViewModel 
+﻿@*@model ArticleSystem.Web.Models.Aarticle.CommentViewModel 
 
 <div>
     <div>Commented by: <em>@Model.AuthorUsername</em></div>
     <div>@Model.Content</div>
-</div>
+</div>*@
+
+@model IEnumerable<ArticleSystem.Web.Models.Aarticle.CommentViewModel>
+
+    @foreach (var model in Model)
+    {
+         
+        <div class="tab-pane table-bordered blockquote-reverse">
+        <h4>By: model.AuthorName</h4>
+        <p>model.Content</p>
+        <p>model.DateCreated</p>
+    </div>
+
+    }

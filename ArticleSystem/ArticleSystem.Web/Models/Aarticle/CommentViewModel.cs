@@ -5,7 +5,7 @@ using AutoMapper;
 
 namespace ArticleSystem.Web.Models.Aarticle
 {
-    public class CommentViewModel: IMapFrom<Comment> //IHaveCustomMappings
+    public class CommentViewModel: IMapFrom<Comment>,IHaveCustomMappings
     {
 
         // public CommentViewModel()

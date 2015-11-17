@@ -16,19 +16,23 @@
         <div class="col col-md-12 thumbnail">
             <img src="@Model.ImageUrl" alt="@Model.Name" />
         </div>
+       
         <div class="col-md-12 text-center ">
-
             <h4> Votes:  <span id="article-votes" class="text-danger">@Model.Votes</span></h4>
             @if (User.Identity.IsAuthenticated && Model.UserCanVote)
             {
-                @Ajax.ActionLink("Vote", "Vote", "Article", new { id = Model.Id }, new AjaxOptions
+                @Ajax.ActionLink("+", "Vote", "Article", new { id = Model.Id }, new AjaxOptions
+                {
+                    InsertionMode = InsertionMode.Replace,
+                    UpdateTargetId = "article-votes",
+                    HttpMethod = "Post",
+                    OnSuccess = "hideVoteButton"
+                },
+                    new { id = "vote-button", @class = "btn btn-danger" })
+            }
+            else
             {
-                InsertionMode = InsertionMode.Replace,
-                UpdateTargetId = "article-votes",
-                HttpMethod = "Post",
-                OnSuccess = "hideVoteButton"
-            },
-                new { id = "vote-button", @class = "btn btn-danger" })
+                <i>You alredy voted.</i>
             }
 
         </div>
@@ -52,10 +56,11 @@
 }
 
 <div id="Comments" class="row">   
-    @foreach (var comment in Model.Comments)
+    @*@foreach (var comment in Model.Comments)
     {
         @Html.Partial("_CommentPartial", comment)<br/> 
-    }
+    }*@
+    @Html.Partial("_CommentPartial")
 </div>
 
 <div class="row">

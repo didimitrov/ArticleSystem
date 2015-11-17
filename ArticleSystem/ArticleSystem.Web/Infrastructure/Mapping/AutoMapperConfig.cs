@@ -39,7 +39,7 @@ namespace ArticleSystem.Web.Infrastructure.Mapping
                 Mapper.CreateMap(map.Source, map.Destination);
             }
         }
-
+        
         private static void LoadCustomMappings(IEnumerable<Type> types)
         {
             var maps = from t in types

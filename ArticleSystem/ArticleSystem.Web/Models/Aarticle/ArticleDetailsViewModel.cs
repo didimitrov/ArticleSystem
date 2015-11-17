@@ -11,18 +11,6 @@ namespace ArticleSystem.Web.Models.Aarticle
 {
     public class ArticleDetailsViewModel: IMapFrom<Article>, IHaveCustomMappings
     {
-        private readonly string currentUserId;
-
-        public ArticleDetailsViewModel()
-        {
-            
-        }
-        public ArticleDetailsViewModel(string currentUserId)
-        {
-            this.currentUserId = currentUserId;
-        }
-
-
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -49,8 +37,8 @@ namespace ArticleSystem.Web.Models.Aarticle
             configuration.CreateMap<Article, ArticleDetailsViewModel>()
                 .ForMember(x => x.Votes, opt => opt.MapFrom(c => c.Votes.Count))
                 .ForMember(x => x.ImageUrl, opt => opt.MapFrom(x => x.Url))
-                .ForMember(x => x.Comments, opt => opt.MapFrom(x => x.Comments))
-                .ForMember(x=>x.UserCanVote, opt=>opt.MapFrom(x=>x.Votes.All(v=>v.VotedById!=currentUserId)));
+                .ForMember(x => x.Comments, opt => opt.MapFrom(x => x.Comments));
+
         }
     }
 }

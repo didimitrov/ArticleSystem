@@ -187,6 +187,8 @@
     <Compile Include="Infrastructure\Mapping\AutoMapperConfig.cs" />
     <Compile Include="Infrastructure\Mapping\IHaveCustomMappings.cs" />
     <Compile Include="Infrastructure\Mapping\IMapFrom.cs" />
+    <Compile Include="Infrastructure\Mapping\IMapTo.cs" />
+    <Compile Include="Infrastructure\Mapping\TypesMap.cs" />
     <Compile Include="Models\Aarticle\SubmitCommentModel.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
