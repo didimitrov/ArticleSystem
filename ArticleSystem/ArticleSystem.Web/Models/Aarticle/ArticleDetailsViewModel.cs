@@ -1,12 +1,28 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ArticleSystem.Models;
 using ArticleSystem.Web.Infrastructure.Mapping;
 using AutoMapper;
+using Microsoft.Ajax.Utilities;
+using Microsoft.VisualBasic.ApplicationServices;
+using Microsoft.AspNet.Identity;
 
 namespace ArticleSystem.Web.Models.Aarticle
 {
     public class ArticleDetailsViewModel: IMapFrom<Article>, IHaveCustomMappings
     {
+        private readonly string currentUserId;
+
+        public ArticleDetailsViewModel()
+        {
+            
+        }
+        public ArticleDetailsViewModel(string currentUserId)
+        {
+            this.currentUserId = currentUserId;
+        }
+
+
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -25,12 +41,16 @@ namespace ArticleSystem.Web.Models.Aarticle
 
         public int Votes { get; set; }
 
+        
+
+
         public void CreateMappings(IConfiguration configuration)
         {
             configuration.CreateMap<Article, ArticleDetailsViewModel>()
                 .ForMember(x => x.Votes, opt => opt.MapFrom(c => c.Votes.Count))
                 .ForMember(x => x.ImageUrl, opt => opt.MapFrom(x => x.Url))
-                .ForMember(x=>x.Comments, opt=>opt.MapFrom(x=>x.Comments));
+                .ForMember(x => x.Comments, opt => opt.MapFrom(x => x.Comments))
+                .ForMember(x=>x.UserCanVote, opt=>opt.MapFrom(x=>x.Votes.All(v=>v.VotedById!=currentUserId)));
         }
     }
 }

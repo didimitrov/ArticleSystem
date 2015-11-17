@@ -2,6 +2,8 @@
 using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Web.Mvc;
 using ArticleSystem.Common.Repository;
 using ArticleSystem.Data;
@@ -16,15 +18,15 @@ namespace ArticleSystem.Web.Controllers
     public class ArticleController : BaseController
     {
         private readonly IRepository<Article> _articles;
-        private readonly IRepository<Vote> _vote;
+       // private readonly IRepository<Vote> _vote;
         private readonly IRepository<Comment> _comments;
         //private readonly IRepository<Category> _categories; 
 
 
-        public ArticleController(IRepository<Article> articles, IRepository<Vote> vote, IRepository<Comment> comments)
+        public ArticleController(IRepository<Article> articles, IRepository<Comment> comments)
         {
             _articles = articles;
-            _vote = vote;
+            
             _comments = comments;
         }
 
@@ -69,6 +71,8 @@ namespace ArticleSystem.Web.Controllers
                 .Where(x => x.Id == id)
                 .ProjectTo<ArticleDetailsViewModel>()
                 .FirstOrDefault();
+
+
 
             if (articleDetailsModel == null)
             {
@@ -122,7 +126,7 @@ namespace ArticleSystem.Web.Controllers
         {
             var userId = User.Identity.GetUserId();
 
-            var canVote = !_vote.All().Any(x => x.ArticleId == id && x.VotedById == userId);
+            var canVote = !Data.Votes.All().Any(x => x.ArticleId == id && x.VotedById == userId);
 
             if (canVote)
             {
@@ -133,7 +137,7 @@ namespace ArticleSystem.Web.Controllers
                         ArticleId = id,
                         VotedById = userId
                     });
-                _vote.SaveChanges();
+                Data.Votes.SaveChanges();
             }
 
             var votes = _articles.GetById(id).Votes.Count();

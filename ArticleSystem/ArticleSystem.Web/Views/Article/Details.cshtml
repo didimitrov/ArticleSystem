@@ -48,7 +48,7 @@
 
 @if (Model.Comments.Count!=0)
 {
-    <h3>Comments..</h3>
+    <h3>Comments:</h3>
 }
 
 <div id="Comments" class="row">   
@@ -59,9 +59,10 @@
 </div>
 
 <div class="row">
-    <p>Leave a comment:</p>
     @if (User.Identity.IsAuthenticated)
     {
+
+        <p>Leave a comment:</p>
         using (Ajax.BeginForm("PostComment", "Article", new { id = Model.Id }, new AjaxOptions
         {
             HttpMethod = "Post",
@@ -76,6 +77,10 @@
             <br />
             <input type="submit" value="Comment" class="btn btn-default" />
         }
+    }
+    else
+    {
+        <div class="alert alert-warning text-center col- col-md-6 col-md-offset-3" role="alert">Login to comment or vote.</div>
     }
     <br />
 </div>
