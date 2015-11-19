@@ -98,10 +98,15 @@ namespace ArticleSystem.Web.Controllers
             if (commentModel != null && this.ModelState.IsValid)
             {
 
-                Comment databaseComment = new Comment();
-                databaseComment.Content = commentModel.Comment;
-                databaseComment.ArticleId = commentModel.ArticleId;
-                databaseComment.CreatedAt = DateTime.Now;
+                var databaseComment = new Comment
+                {
+                  //  Id=commentModel.Id,
+                    User = this.UserProfile,
+                    Content = commentModel.Comment,
+                    ArticleId = commentModel.ArticleId,
+                    CreatedAt = DateTime.Now
+                };
+
                 var article = this.Data.Articles.GetById(commentModel.ArticleId);
                 if (article == null)
                 {
@@ -110,10 +115,9 @@ namespace ArticleSystem.Web.Controllers
 
                 article.Comments.Add(databaseComment);
                 this.Data.SaveChanges();
-
+                
                // return PartialView("_ProductCommentsPartial", product.Comments.AsQueryable().Project().To<CommentViewModel>());
-
-                return this.PartialView("_CommentPartial", article.Comments.AsQueryable().ProjectTo<CommentViewModel>());
+                return this.PartialView("_CommentPartial", article.Comments.SingleOrDefault(x=>x.Id==databaseComment.Id).ProjectTo<CommentViewModel>());
             }
 
             return this.Json("Error");

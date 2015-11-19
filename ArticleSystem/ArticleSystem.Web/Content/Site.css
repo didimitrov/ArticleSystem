@@ -25,6 +25,35 @@ textarea {
     max-width: 280px;
 }
 
+::-webkit-input-placeholder {
+ font-size: 14px;
+ color: #d0cdfa;
+ text-transform: uppercase;
+ text-transform: uppercase;
+ text-align: center;
+ font-weight: bold;
+}
+ 
+.input-comment-field { 
+ font-size: 14px; 
+ color: #d0cdfa;
+ text-transform: uppercase;
+ text-align: center;
+ font-weight: bold;
+ height: 100px;
+ width: 400px;
+}
+
+.comment {
+    margin:10px 0;
+    margin-left:40px;
+    border-left: 3px solid red;
+    background-color:#f5fffa 
+}
+
+.comment-content {
+     
+}
 body img {
     max-width: 100%;
 }

@@ -1,4 +1,5 @@
-﻿@using ArticleSystem.Web.Models.Aarticle
+﻿@using System.Web.UI.WebControls
+@using ArticleSystem.Web.Models.Aarticle
 @model ArticleDetailsViewModel
 
 @{
@@ -56,31 +57,30 @@
 }
 
 <div id="Comments" class="row">   
-    @*@foreach (var comment in Model.Comments)
+    @foreach (var comment in Model.Comments)
     {
         @Html.Partial("_CommentPartial", comment)<br/> 
-    }*@
-    @Html.Partial("_CommentPartial")
+    }
+    @*@Html.Partial("_CommentPartial", Model.Comments)*@
 </div>
 
-<div class="row">
+<div class="row add-comment-form text-center">
     @if (User.Identity.IsAuthenticated)
     {
-
-        <p>Leave a comment:</p>
+       // <p>Leave a comment:</p>
         using (Ajax.BeginForm("PostComment", "Article", new { id = Model.Id }, new AjaxOptions
         {
             HttpMethod = "Post",
             InsertionMode = InsertionMode.InsertAfter,
             UpdateTargetId = "Comments",
             OnFailure = "commentPostFailure"
-        }))
+        } ))
         {
             @Html.Hidden("ArticleId", Model.Id)
-            @Html.TextArea("comment")
+            @Html.TextArea("comment", new{@class ="input-comment-field", @placeholder="leave a comment"})
             @Html.AntiForgeryToken()
             <br />
-            <input type="submit" value="Comment" class="btn btn-default" />
+            <input type="submit" value="Comment" class="btn btn-default text-center" />
         }
     }
     else

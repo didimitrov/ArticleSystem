@@ -1,11 +1,17 @@
-﻿@*@model ArticleSystem.Web.Models.Aarticle.CommentViewModel 
+﻿@model ArticleSystem.Web.Models.Aarticle.CommentViewModel 
 
-<div>
+@*<div>
     <div>Commented by: <em>@Model.AuthorUsername</em></div>
     <div>@Model.Content</div>
 </div>*@
 
-@model IEnumerable<ArticleSystem.Web.Models.Aarticle.CommentViewModel>
+<div class="comment col-md-10 col-md-offset-1">
+    <strong class="left break-word">@Model.AuthorUsername</strong>
+    <small class="right"><time>@Model.CreatedAt</time></small><hr />
+    <p class="comment-content">@Model.Content</p>
+</div>
+
+@*@model IEnumerable<ArticleSystem.Web.Models.Aarticle.CommentViewModel>
 
     @foreach (var model in Model)
     {
@@ -16,4 +22,4 @@
         <p>model.DateCreated</p>
     </div>
 
-    }
+    }*@
